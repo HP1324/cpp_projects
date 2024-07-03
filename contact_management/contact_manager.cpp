@@ -2,9 +2,11 @@
 #include <vector>
 using namespace std;
 class Contact;
+void showMenu();
 Contact addContact();
 int searchContact(string searchKey, const vector<Contact> &contacts);
 void viewContacts(const vector<Contact> &contacts);
+void deleteContact(int index, vector<Contact> &contacts);
 class Contact
 {
 private:
@@ -17,17 +19,15 @@ public:
     friend Contact addContact();
     friend void viewContacts(const vector<Contact> &contacts);
     friend int searchContact(string searchKey, const vector<Contact> &contacts);
-    void print(){
-        cout << "First Name   : " << firstName<< '\n';
-        cout << "Last Name    : " << lastName <<'\n';
-        cout << "Phone Number : " << phoneNumber<< '\n';
-        cout << "Email Address: " << emailAddress<<'\n';
+    void print()
+    {
+        cout << "First Name   : " << firstName << '\n';
+        cout << "Last Name    : " << lastName << '\n';
+        cout << "Phone Number : " << phoneNumber << '\n';
+        cout << "Email Address: " << emailAddress << '\n';
     }
 };
 
-void showMenu();
-
-void deleteContact(int index);
 int main()
 {
     vector<Contact> contacts;
@@ -48,18 +48,38 @@ int main()
             showMenu();
             break;
         case 3:
+        {
             string searchKey;
             cout << "Enter one of the following to search \n (First Name, Last Name, Phone Number, Email Address): ";
             cin.ignore();
             getline(cin, searchKey);
-            int result = searchContact(searchKey,contacts);
-            if(result == -1) cout << "Contact not found!";
-            else {
+            int result = searchContact(searchKey, contacts);
+            if (result == -1)
+                cout << "Contact not found!";
+            else
+            {
                 cout << "Contact found at index " << result << '\n';
-                contacts[result-1].print();
-                }
+                contacts[result - 1].print();
+            }
             showMenu();
             break;
+        }
+        case 4:
+        {
+            viewContacts(contacts);
+            cout << "\nEnter index of the contact you want to delete: ";
+            int iDelete;
+            cin >> iDelete;
+            if (iDelete < 1 && iDelete > (int)contacts.size())
+                cout << "Contact not available\n";
+            else
+            {
+                deleteContact(iDelete, contacts);
+            }
+            cin.ignore();
+            showMenu();
+            break;
+        }
         }
 
     } while (input != 6);
@@ -70,8 +90,8 @@ void showMenu()
     cout << "1. Add Contacts\n";
     cout << "2. View Contacts\n";
     cout << "3. Search Contacts\n";
-    cout << "4. Edit Contact\n";
-    cout << "5. Delete Contact\n";
+    cout << "4. Delete Contact\n";
+    cout << "5. Edit Contact\n";
     cout << "6. Exit\n\n";
 
     cout << "Please choose an option(1-6): ";
@@ -113,13 +133,22 @@ void viewContacts(const vector<Contact> &contacts)
 }
 
 int searchContact(string searchKey, const vector<Contact> &contacts)
+
 {
     for (auto i = 0; i < contacts.size(); ++i)
     {
-        if (searchKey == contacts[i].firstName || searchKey == contacts[i].lastName || searchKey == contacts[i].phoneNumber || searchKey == contacts[i].emailAddress){
+        if (searchKey == contacts[i].firstName || searchKey == contacts[i].lastName || searchKey == contacts[i].phoneNumber || searchKey == contacts[i].emailAddress)
+        {
             return i + 1;
-        }else{
+        }
+        else
+        {
             return -1;
         }
     }
+}
+
+void deleteContact(int index, vector<Contact> &contacts)
+{
+    contacts.erase(contacts.erase((contacts.begin() + index) - 1));
 }
