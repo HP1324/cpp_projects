@@ -32,6 +32,7 @@ int main()
 {
     vector<Contact> contacts;
 
+    // cout << it;
     showMenu();
     int input;
     do
@@ -66,16 +67,19 @@ int main()
         }
         case 4:
         {
-            viewContacts(contacts);
-            cout << "\nEnter index of the contact you want to delete: ";
-            int iDelete;
-            cin >> iDelete;
-            if (iDelete < 1 && iDelete > (int)contacts.size())
-                cout << "Contact not available\n";
+            if (contacts.empty())
+                cout << "No contacts to delete!\n";
             else
             {
-                deleteContact(iDelete, contacts);
+                viewContacts(contacts);
+                cout << "Enter index of the contact to delete: ";
+                int index;
+                cin >> index;
+                // contacts.erase(contacts.begin() + (index - 1));
+                deleteContact(index, contacts);
+                cout << "Contact deleted successfully!\n";
             }
+
             cin.ignore();
             showMenu();
             break;
@@ -119,16 +123,18 @@ void viewContacts(const vector<Contact> &contacts)
         cout << "Contact list empty! add some contacts first\n";
     else
     {
+        cout << "\n*****Contact List*****\n\n";
         for (int i = 0; i < (int)contacts.size(); ++i)
         {
-            cout << "\n*****Contact List*****\n\n";
-            cout << "index\tFirst Name\tSecond Name\tPhone Number\tEmail Address\n";
-            cout << i + 1 << "\t  ";
-            cout << contacts[i].firstName << "\t\t";
-            cout << contacts[i].lastName << "\t\t ";
-            cout << contacts[i].phoneNumber << "\t";
-            cout << contacts[i].emailAddress << '\n';
+            // cout << "index\tFirst Name\tSecond Name\tPhone Number\tEmail Address\n";
+            // cout << i + 1 << "\n";
+
+            cout << "  | First Name   : " << contacts[i].firstName << "\n";
+            cout << i + 1 << " | Last Name    : " << contacts[i].lastName << "\n";
+            cout << "  | Phone Number : " << contacts[i].phoneNumber << "\n";
+            cout << "  | Email Address: " << contacts[i].emailAddress << "\n\n";
         }
+        cout << "\n\n";
     }
 }
 
@@ -141,14 +147,11 @@ int searchContact(string searchKey, const vector<Contact> &contacts)
         {
             return i + 1;
         }
-        else
-        {
-            return -1;
-        }
     }
+    return -1;
 }
 
 void deleteContact(int index, vector<Contact> &contacts)
 {
-    contacts.erase(contacts.erase((contacts.begin() + index) - 1));
+    contacts.erase(contacts.begin() + (index - 1));
 }
