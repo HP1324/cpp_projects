@@ -7,6 +7,7 @@ Contact addContact();
 int searchContact(string searchKey, const vector<Contact> &contacts);
 void viewContacts(const vector<Contact> &contacts);
 void deleteContact(int index, vector<Contact> &contacts);
+void editContact(int index, vector<Contact> &contacts);
 class Contact
 {
 private:
@@ -19,6 +20,7 @@ public:
     friend Contact addContact();
     friend void viewContacts(const vector<Contact> &contacts);
     friend int searchContact(string searchKey, const vector<Contact> &contacts);
+    friend void editContact(int index, vector<Contact> &contacts);
     void print()
     {
         cout << "First Name   : " << firstName << '\n';
@@ -75,18 +77,35 @@ int main()
                 cout << "Enter index of the contact to delete: ";
                 int index;
                 cin >> index;
-                // contacts.erase(contacts.begin() + (index - 1));
                 deleteContact(index, contacts);
                 cout << "Contact deleted successfully!\n";
             }
 
-            cin.ignore();
+            // cin.ignore();
             showMenu();
             break;
         }
+        case 5:
+            if (contacts.empty())
+                cout << "\nNo contacts to change!\n";
+            else
+            {
+                viewContacts(contacts);
+                cout << "Enter index of the contact to edit: ";
+                int index;
+                cin >> index;
+                editContact(index, contacts);
+            }
+            //cin.ignore();
+            showMenu();
+            break;
         }
+        case 6:
+        cout << "Exiting...";
+            break;
 
     } while (input != 6);
+    return 0;
 }
 void showMenu()
 {
@@ -154,4 +173,23 @@ int searchContact(string searchKey, const vector<Contact> &contacts)
 void deleteContact(int index, vector<Contact> &contacts)
 {
     contacts.erase(contacts.begin() + (index - 1));
+}
+void editContact(int index, vector<Contact> &contacts)
+{
+    if (contacts.empty())
+        cout << "\nNo contacts to change!\n";
+    else
+    {
+        cin.ignore();
+        cout << "First name: ";
+        getline(cin, contacts[index-1].firstName);
+        cout << "Last name:  ";
+        getline(cin, contacts[index-1].lastName);
+        cout << "Phone Number: ";
+        getline(cin, contacts[index-1].phoneNumber);
+        cout << "Email : ";
+        getline(cin, contacts[index-1].emailAddress);
+        cout << "\nContact edited successfully!\n";
+    }
+    
 }
