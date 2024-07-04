@@ -31,7 +31,7 @@ int main()
             else
             {
                 cout << "Contact found at index " << result << '\n';
-                contacts[result - 1].print();
+                contacts[result - 1].print(result);
             }
             showMenu();
             break;
@@ -47,9 +47,7 @@ int main()
                 int index;
                 cin >> index;
                 deleteContact(index, contacts);
-                cout << "Contact deleted successfully!\n";
             }
-
             // cin.ignore();
             showMenu();
             break;
@@ -84,7 +82,7 @@ void showMenu()
     cout << "Contact book menu:\n\n";
     cout << "1. Add Contacts\n";
     cout << "2. View Contacts\n";
-    cout << "3. Search Contacts\n"; 
+    cout << "3. Search Contacts\n";
     cout << "4. Delete Contact\n";
     cout << "5. Edit Contact\n";
     cout << "6. Exit\n\n";

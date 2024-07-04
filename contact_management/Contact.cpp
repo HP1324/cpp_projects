@@ -1,5 +1,5 @@
 #include "Contact.h"
-Contact addContact() 
+Contact addContact()
 {
     Contact contact;
     cin.ignore();
@@ -25,14 +25,9 @@ void viewContacts(const vector<Contact> &contacts)
         cout << "\n*****Contact List*****\n\n";
         for (int i = 0; i < (int)contacts.size(); ++i)
         {
-            // cout << "index\tFirst Name\tSecond Name\tPhone Number\tEmail Address\n";
-            // cout << i + 1 << "\n";
-
-            cout << "  | First Name   : " << contacts[i].firstName << "\n";
-            cout << i + 1 << " | Last Name    : " << contacts[i].lastName << "\n";
-            cout << "  | Phone Number : " << contacts[i].phoneNumber << "\n";
-            cout << "  | Email Address: " << contacts[i].emailAddress << "\n\n";
+            contacts[i].print(i);
         }
+        cout << "*****List End*****";
         cout << "\n\n";
     }
 }
@@ -52,24 +47,31 @@ int searchContact(string searchKey, const vector<Contact> &contacts)
 
 void deleteContact(int index, vector<Contact> &contacts)
 {
-    contacts.erase(contacts.begin() + (index - 1));
+    if(contacts.empty()) cout << "No contacts to delete!\n";
+    else if (index > 0 && index <= static_cast<int>(contacts.size()))
+    {
+        contacts.erase(contacts.begin() + (index - 1));
+        cout << "Contact deleted succesfully!\n";
+    }else{
+        cout << "Invalid index!\n";
+    }
 }
 void editContact(int index, vector<Contact> &contacts)
 {
-    if (contacts.empty())
-        cout << "\nNo contacts to change!\n";
+    if (index > 0 && index <= (int)contacts.size())
+    {
+        cout << "Editing contact: " << index << '\n';
+        contacts[index - 1] = addContact();
+    }
     else
     {
-        cin.ignore();
-        cout << "First name: ";
-        getline(cin, contacts[index-1].firstName);
-        cout << "Last name:  ";
-        getline(cin, contacts[index-1].lastName);
-        cout << "Phone Number: ";
-        getline(cin, contacts[index-1].phoneNumber);
-        cout << "Email : ";
-        getline(cin, contacts[index-1].emailAddress);
-        cout << "\nContact edited successfully!\n";
+        cout << "Invalid index!\n";
     }
-    
+}
+void Contact::print(int i) const
+{
+    cout << "  | First Name   : " << firstName << "\n";
+    cout << i + 1 << " | Last Name    : " << lastName << "\n";
+    cout << "  | Phone Number : " << phoneNumber << "\n";
+    cout << "  | Email Address: " << emailAddress << "\n\n";
 }

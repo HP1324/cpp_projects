@@ -24,13 +24,7 @@ public:
     friend void viewContacts(const vector<Contact> &contacts);
     friend int searchContact(string searchKey, const vector<Contact> &contacts);
     friend void editContact(int index, vector<Contact> &contacts);
-    void print()
-    {
-        cout << "First Name   : " << firstName << '\n';
-        cout << "Last Name    : " << lastName << '\n';
-        cout << "Phone Number : " << phoneNumber << '\n';
-        cout << "Email Address: " << emailAddress << '\n';
-    }
+    void print(int i)const;
 };
 
 #endif
