@@ -3,6 +3,7 @@
 
 #include<iostream>
 #include<vector>
+#include<regex>
 using namespace std;
 class Contact;
 Contact addContact();
@@ -25,6 +26,7 @@ public:
     friend int searchContact(string searchKey, const vector<Contact> &contacts);
     friend void editContact(int index, vector<Contact> &contacts);
     void print(int i)const;
+    bool isValidContact();
 };
 
 #endif
