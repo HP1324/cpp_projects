@@ -1,4 +1,4 @@
 *.exe
 *tempCodeRunnerFile.cpp
 *.txt
-/test/
+test/
