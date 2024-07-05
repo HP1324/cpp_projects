@@ -46,7 +46,7 @@ int searchContact(string searchKey, const vector<Contact> &contacts)
     {
         if (searchKey == contacts[i].firstName || searchKey == contacts[i].lastName || searchKey == contacts[i].phoneNumber || searchKey == contacts[i].emailAddress)
         {
-            return i + 1;
+            return i;
         }
     }
     return -1;
@@ -88,7 +88,21 @@ void Contact::print(int i) const
 bool Contact::isValidContact()
 {
     regex namePattern("^[A-Za-z\\s-]+$");
-    regex phonePattern("^(\\+91|91)?[7-9]\\d{9}$");
+    regex phonePattern("^(?:\\+91|91)?[-\\s]?[7-9]\\d{4}[-\\s]?\\d{5}$");
     regex emailPattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     return (regex_match(firstName, namePattern) && regex_match(lastName, namePattern) && regex_match(phoneNumber, phonePattern) && regex_match(emailAddress, emailPattern));
+}
+void Contact::addToFile()
+{
+    ofstream contactFile{"contactfile.txt", ios::app};
+    if (!contactFile)
+        cout << "File couldn't be opened for writing\n";
+    else
+    {
+        contactFile << firstName << "; ";
+        contactFile << lastName << "; ";
+        contactFile << phoneNumber << "; ";
+        contactFile << emailAddress << "\n";
+    }
+    contactFile.close();
 }

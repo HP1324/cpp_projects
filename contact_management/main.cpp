@@ -1,20 +1,27 @@
 
 #include "Contact.h"
+#include<limits>
 void showMenu();
 int main()
 {
     vector<Contact> contacts;
-    showMenu();
+    ofstream contactFile;
     int input;
+    int vcPointer = -1;
     do
     {
+    showMenu(); 
         cin >> input;
         switch (input)
         {
         case 1:
+        {
             contacts.push_back(addContact());
+            ++vcPointer;
+            contacts[vcPointer].addToFile();
             showMenu();
             break;
+        }
         case 2:
             viewContacts(contacts);
             showMenu();
@@ -30,8 +37,8 @@ int main()
                 cout << "Contact not found!";
             else
             {
-                cout << "Contact found at index " << result << '\n';
-                contacts[result - 1].print(result);
+                cout << "Contact found at index " << result + 1 << '\n';
+                contacts[result].print(result);
             }
             showMenu();
             break;
@@ -70,11 +77,13 @@ int main()
             cout << "Exiting...";
             break;
         default:
-            cerr << "Wrong input! please try again! ";
+            cout << "Invalid Input! try again...\n";
             break;
         }
-
+        cin.clear();
+       cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     } while (input != 6);
+
     return 0;
 }
 void showMenu()

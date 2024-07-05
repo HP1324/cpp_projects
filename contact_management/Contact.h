@@ -2,8 +2,10 @@
 #define CONTACT_H 
 
 #include<iostream>
-#include<vector>
+#include<fstream>
 #include<regex>
+#include<vector>
+
 using namespace std;
 class Contact;
 Contact addContact();
@@ -25,6 +27,7 @@ public:
     friend void viewContacts(const vector<Contact> &contacts);
     friend int searchContact(string searchKey, const vector<Contact> &contacts);
     friend void editContact(int index, vector<Contact> &contacts);
+    void addToFile();
     void print(int i)const;
     bool isValidContact();
 };
