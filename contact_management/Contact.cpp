@@ -1,8 +1,7 @@
 #include "Contact.h"
 const char *const CONTACT_FILE = "contact_data.txt";
 
-ifstream readContacts;
-string fileContentString;
+
 Contact addContact()
 {
     Contact contact;
@@ -28,28 +27,7 @@ Contact addContact()
 }
 void viewContacts(vector<Contact> &contacts)
 {
-    readContacts.open(CONTACT_FILE, ios::in);
-    if (!readContacts)
-        cout << "Can't open the file for reading\n";
-    int vCounter = 0;
-    string delimiter = "; ";
-    size_t pos = 0;
-    string token;
-    int tokenCounter = 0;
-    while (readContacts >> fileContentString)
-    {
-        while ((pos = fileContentString.find(delimiter)) != string::npos)
-        {
-            token = fileContentString.substr(0, pos);
-            if (tokenCounter == 0)contacts[vCounter].firstName = token;
-            if (tokenCounter == 1)contacts[vCounter].lastName = token;
-            if (tokenCounter == 2)contacts[vCounter].phoneNumber = token;
-            if (tokenCounter == 3)contacts[vCounter].emailAddress = token;
-            ++tokenCounter;
-        }
-        contacts.push_back(contacts[vCounter]);
-        ++vCounter;
-    }
+    contacts = loadContacts(contacts);
 
     if (contacts.empty())
         cout << "Contact list empty! add some contacts first\n";
@@ -63,7 +41,6 @@ void viewContacts(vector<Contact> &contacts)
         cout << "*****List End*****";
         cout << "\n\n";
     }
-    readContacts.close();
 }
 
 int searchContact(string searchKey, const vector<Contact> &contacts)
@@ -104,6 +81,39 @@ void editContact(int index, vector<Contact> &contacts)
     {
         cout << "Invalid index!\n";
     }
+}
+vector<Contact> loadContacts(vector<Contact>& contacts)
+{
+    ifstream readContacts(CONTACT_FILE, ios::in);
+    if (!readContacts)
+        cout << "Can't open the file for reading\n";
+
+    string line;
+    string delimiter = "; ";
+    
+    while (getline(readContacts, line))
+    {
+        Contact contact;
+        size_t pos = 0;
+        int tokenCounter = 0;
+        while((pos = line.find(delimiter) ) != string::npos){
+            string token = line.substr(0,pos);
+            switch(tokenCounter){
+                case 0: contact.firstName = token;break;
+                case 1: contact.lastName = token;break;
+                case 2: contact.phoneNumber = token;break;
+            }
+            line.erase(0,pos+delimiter.length());
+            ++tokenCounter;
+        }
+        //The last has to be dealt with separately
+        if(tokenCounter == 3){
+            contact.emailAddress = line;
+        }
+        contacts.push_back(contact);
+    }
+    readContacts.close();
+    return contacts;
 }
 void Contact::print(int i) const
 {

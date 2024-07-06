@@ -14,7 +14,7 @@ void viewContacts(vector<Contact> &contacts);
 int searchContact(string searchKey, const vector<Contact> &contacts);
 void editContact(int index, vector<Contact> &contacts);
 void deleteContact(int index, vector<Contact> &contacts);
-
+vector<Contact> loadContacts(vector<Contact>& contacts);
 class Contact
 {
 private:
@@ -28,6 +28,8 @@ public:
     friend void viewContacts(vector<Contact> &contacts);
     friend int searchContact(string searchKey, const vector<Contact> &contacts);
     friend void editContact(int index, vector<Contact> &contacts);
+    friend vector<Contact> loadContacts(vector<Contact>& contacts);
+
     void addToFile();
     void print(int i) const;
     bool isValidContact();
