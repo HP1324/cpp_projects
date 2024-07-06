@@ -1,5 +1,8 @@
 #include "Contact.h"
-const char* const CONTACT_FILE = "contact_data.txt";
+const char *const CONTACT_FILE = "contact_data.txt";
+
+ifstream readContacts;
+string fileContentString;
 Contact addContact()
 {
     Contact contact;
@@ -23,9 +26,31 @@ Contact addContact()
     cout << "Contact added successfully\n";
     return contact;
 }
-void viewContacts(const vector<Contact> &contacts)
-
+void viewContacts(vector<Contact> &contacts)
 {
+    readContacts.open(CONTACT_FILE, ios::in);
+    if (!readContacts)
+        cout << "Can't open the file for reading\n";
+    int vCounter = 0;
+    string delimiter = "; ";
+    size_t pos = 0;
+    string token;
+    int tokenCounter = 0;
+    while (readContacts >> fileContentString)
+    {
+        while ((pos = fileContentString.find(delimiter)) != string::npos)
+        {
+            token = fileContentString.substr(0, pos);
+            if (tokenCounter == 0)contacts[vCounter].firstName = token;
+            if (tokenCounter == 1)contacts[vCounter].lastName = token;
+            if (tokenCounter == 2)contacts[vCounter].phoneNumber = token;
+            if (tokenCounter == 3)contacts[vCounter].emailAddress = token;
+            ++tokenCounter;
+        }
+        contacts.push_back(contacts[vCounter]);
+        ++vCounter;
+    }
+
     if (contacts.empty())
         cout << "Contact list empty! add some contacts first\n";
     else
@@ -38,6 +63,7 @@ void viewContacts(const vector<Contact> &contacts)
         cout << "*****List End*****";
         cout << "\n\n";
     }
+    readContacts.close();
 }
 
 int searchContact(string searchKey, const vector<Contact> &contacts)
