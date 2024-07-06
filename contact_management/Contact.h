@@ -6,6 +6,8 @@
 #include<regex>
 #include<vector>
 
+extern const char* const CONTACT_FILE;
+
 using namespace std;
 class Contact;
 Contact addContact();

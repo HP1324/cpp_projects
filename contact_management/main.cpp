@@ -6,11 +6,11 @@ int main()
 {
     vector<Contact> contacts;
     ofstream contactFile;
+    showMenu(); 
     int input;
     int vcPointer = -1;
     do
     {
-    showMenu(); 
         cin >> input;
         switch (input)
         {

@@ -1,4 +1,5 @@
 #include "Contact.h"
+const char* const CONTACT_FILE = "contact_data.txt";
 Contact addContact()
 {
     Contact contact;
@@ -94,7 +95,7 @@ bool Contact::isValidContact()
 }
 void Contact::addToFile()
 {
-    ofstream contactFile{"contactfile.txt", ios::app};
+    ofstream contactFile{CONTACT_FILE, ios::app};
     if (!contactFile)
         cout << "File couldn't be opened for writing\n";
     else
