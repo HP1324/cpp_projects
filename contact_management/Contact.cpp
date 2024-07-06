@@ -1,11 +1,9 @@
 #include "Contact.h"
 const char *const CONTACT_FILE = "contact_data.txt";
 
-
 Contact addContact()
 {
     Contact contact;
-    cin.ignore();
     while (true)
     {
         cout << "Enter contact details: ";
@@ -25,9 +23,9 @@ Contact addContact()
     cout << "Contact added successfully\n";
     return contact;
 }
-void viewContacts(vector<Contact> &contacts)
+void viewContacts(vector<Contact> contacts)
 {
-    contacts = loadContacts(contacts);
+    contacts = loadContacts();
 
     if (contacts.empty())
         cout << "Contact list empty! add some contacts first\n";
@@ -82,32 +80,42 @@ void editContact(int index, vector<Contact> &contacts)
         cout << "Invalid index!\n";
     }
 }
-vector<Contact> loadContacts(vector<Contact>& contacts)
+vector<Contact> loadContacts()
 {
     ifstream readContacts(CONTACT_FILE, ios::in);
+    vector<Contact> contacts;
     if (!readContacts)
         cout << "Can't open the file for reading\n";
 
     string line;
     string delimiter = "; ";
-    
+
     while (getline(readContacts, line))
     {
         Contact contact;
         size_t pos = 0;
         int tokenCounter = 0;
-        while((pos = line.find(delimiter) ) != string::npos){
-            string token = line.substr(0,pos);
-            switch(tokenCounter){
-                case 0: contact.firstName = token;break;
-                case 1: contact.lastName = token;break;
-                case 2: contact.phoneNumber = token;break;
+        while ((pos = line.find(delimiter)) != string::npos)
+        {
+            string token = line.substr(0, pos);
+            switch (tokenCounter)
+            {
+            case 0:
+                contact.firstName = token;
+                break;
+            case 1:
+                contact.lastName = token;
+                break;
+            case 2:
+                contact.phoneNumber = token;
+                break;
             }
-            line.erase(0,pos+delimiter.length());
+            line.erase(0, pos + delimiter.length());
             ++tokenCounter;
         }
-        //The last has to be dealt with separately
-        if(tokenCounter == 3){
+        // The last has to be dealt with separately
+        if (tokenCounter == 3)
+        {
             contact.emailAddress = line;
         }
         contacts.push_back(contact);
@@ -129,17 +137,18 @@ bool Contact::isValidContact()
     regex emailPattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     return (regex_match(firstName, namePattern) && regex_match(lastName, namePattern) && regex_match(phoneNumber, phonePattern) && regex_match(emailAddress, emailPattern));
 }
-void Contact::addToFile()
+void addToFile(vector<Contact> &contacts, int i)
 {
     ofstream contactFile{CONTACT_FILE, ios::app};
+    contactFile.seekp(0, ios::beg);
     if (!contactFile)
         cout << "File couldn't be opened for writing\n";
     else
     {
-        contactFile << firstName << "; ";
-        contactFile << lastName << "; ";
-        contactFile << phoneNumber << "; ";
-        contactFile << emailAddress << "\n";
+        contactFile << contacts[i].firstName << "; ";
+        contactFile << contacts[i].lastName << "; ";
+        contactFile << contacts[i].phoneNumber << "; ";
+        contactFile << contacts[i].emailAddress << "\n";
     }
     contactFile.close();
 }

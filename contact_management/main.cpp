@@ -1,23 +1,25 @@
 
 #include "Contact.h"
-#include<limits>
+#include <limits>
 void showMenu();
 int main()
 {
     vector<Contact> contacts;
-    showMenu(); 
+    showMenu();
     int input;
     int vcPointer = -1;
     do
     {
         cin >> input;
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         switch (input)
         {
         case 1:
         {
             contacts.push_back(addContact());
             ++vcPointer;
-            contacts[vcPointer].addToFile();
+            addToFile(contacts,vcPointer);
             showMenu();
             break;
         }
@@ -79,8 +81,7 @@ int main()
             cout << "Invalid Input! try again...\n";
             break;
         }
-        cin.clear();
-       cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     } while (input != 6);
 
     return 0;
