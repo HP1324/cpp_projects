@@ -5,7 +5,6 @@ void showMenu();
 int main()
 {
     vector<Contact> contacts;
-    ofstream contactFile;
     showMenu(); 
     int input;
     int vcPointer = -1;
