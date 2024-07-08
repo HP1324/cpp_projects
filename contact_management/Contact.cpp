@@ -1,48 +1,67 @@
 #include "Contact.h"
+
+const std::string DELIM = "; ";
 const char *const CONTACT_FILE = "contact_data.txt";
 
+std::vector<Contact> contacts = loadContacts();
+
+int Contact::idCounter = 0;
+Contact::Contact() {};
+void Contact::set(std::string firstName, std::string lastName,std::string phoneNumber, std::string emailAddress)
+{
+    //id = ++idCounter;
+    this->firstName = firstName;
+    this->lastName = lastName;
+    this->phoneNumber = phoneNumber;
+    this->emailAddress = emailAddress;
+}
+void ignoreLine() {
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
 Contact addContact()
 {
     Contact contact;
     while (true)
     {
-        cout << "Enter contact details: ";
-        cout << "First name: ";
-        getline(cin, contact.firstName);
-        cout << "Last name:  ";
-        getline(cin, contact.lastName);
-        cout << "Phone Number: ";
-        getline(cin, contact.phoneNumber);
-        cout << "Email : ";
-        getline(cin, contact.emailAddress);
-        if (contact.isValidContact())
+        std::string firstName, lastName,phoneNumber,emailAddress;
+        std::cout << "Enter contact details: ";
+        std::cout << "First name: ";
+        std::getline(std::cin, firstName);
+        std::cout << "Last name:  ";
+        std::getline(std::cin, lastName);
+        std::cout << "Phone Number: ";
+        std::getline(std::cin, phoneNumber);
+        std::cout << "Email : ";
+        std::getline(std::cin, emailAddress);
+        contact.set(firstName, lastName, phoneNumber, emailAddress);
+        if (contact.isValidContact()) {
+        contact.id += 1;
             break;
+        }
         else
-            cout << "Invalid contact! try again...\n";
+            std::cout << "Invalid contact! try again...\n";
     }
-    cout << "Contact added successfully\n";
+    std::cout << "Contact added successfully\n";
     return contact;
 }
-void viewContacts(vector<Contact> contacts)
+void viewContacts()
 {
-    contacts = loadContacts();
-
     if (contacts.empty())
-        cout << "Contact list empty! add some contacts first\n";
+        std::cout << "Contact list empty! add some contacts first\n";
     else
     {
-        cout << "\n*****Contact List*****\n\n";
+        std::cout << "\n*****Contact List*****\n\n";
         for (int i = 0; i < (int)contacts.size(); ++i)
         {
-            contacts[i].print(i);
+            contacts[i].print();
         }
-        cout << "*****List End*****";
-        cout << "\n\n";
+        std::cout << "*****List End*****";
+        std::cout << "\n\n";
     }
 }
 
-int searchContact(string searchKey, const vector<Contact> &contacts)
-
+int searchContact( std::string searchKey, const std::vector<Contact> &contacts)
 {
     for (auto i = 0; i < contacts.size(); ++i)
     {
@@ -54,50 +73,56 @@ int searchContact(string searchKey, const vector<Contact> &contacts)
     return -1;
 }
 
-void deleteContact(int index, vector<Contact> &contacts)
+void deleteContact(int index, std::vector<Contact> &contacts)
 {
     if (contacts.empty())
-        cout << "No contacts to delete!\n";
+        std::cout << "No contacts to delete!\n";
     else if (index > 0 && index <= static_cast<int>(contacts.size()))
     {
         contacts.erase(contacts.begin() + (index - 1));
-        cout << "Contact deleted succesfully!\n";
+        std::cout << "Contact deleted succesfully!\n";
     }
     else
     {
-        cout << "Invalid index!\n";
+        std::cout << "Invalid index!\n";
     }
 }
-void editContact(int index, vector<Contact> &contacts)
+void editContact(std::vector<Contact> &contacts)
 {
-    if (index > 0 && index <= (int)contacts.size())
-    {
-        cout << "Editing contact: " << index << '\n';
-        contacts[index - 1] = addContact();
-    }
+    if (contacts.empty())
+        std::cout << "\nNo contacts to change!\n";
     else
     {
-        cout << "Invalid index!\n";
-    }
+        viewContacts();
+        std::cout << "Enter index of the contact to edit: ";
+        int index;
+        std::cin >> index;
+        if (index > 0 && index <= (int)contacts.size()) {
+            std::cout << "Editing contact " << index << '\n';
+            contacts[index - 1].print();
+            contacts[index - 1] = addContact();
+            }  
+        else { std::cout << "Invalid index!\n"; }
+        }
+    
 }
-vector<Contact> loadContacts()
+std::vector<Contact> loadContacts()
 {
-    ifstream readContacts(CONTACT_FILE, ios::in);
-    vector<Contact> contacts;
+    std::ifstream readContacts(CONTACT_FILE, std::ios::in);
+    std::vector<Contact> contacts;
     if (!readContacts)
-        cout << "Can't open the file for reading\n";
+        std::cout << "Can't open the file for reading\n";
 
-    string line;
-    string delimiter = "; ";
+   std:: string line;
 
     while (getline(readContacts, line))
     {
         Contact contact;
         size_t pos = 0;
         int tokenCounter = 0;
-        while ((pos = line.find(delimiter)) != string::npos)
+        while ((pos = line.find(DELIM)) != std::string::npos)
         {
-            string token = line.substr(0, pos);
+            std::string token = line.substr(0, pos);
             switch (tokenCounter)
             {
             case 0:
@@ -110,7 +135,7 @@ vector<Contact> loadContacts()
                 contact.phoneNumber = token;
                 break;
             }
-            line.erase(0, pos + delimiter.length());
+            line.erase(0, pos + DELIM.length());
             ++tokenCounter;
         }
         // The last has to be dealt with separately
@@ -123,32 +148,35 @@ vector<Contact> loadContacts()
     readContacts.close();
     return contacts;
 }
-void Contact::print(int i) const
+void Contact::print() const
 {
-    cout << "  | First Name   : " << firstName << "\n";
-    cout << i + 1 << " | Last Name    : " << lastName << "\n";
-    cout << "  | Phone Number : " << phoneNumber << "\n";
-    cout << "  | Email Address: " << emailAddress << "\n\n";
+    std::cout << "  | First Name   : " << firstName << "\n";
+    std::cout << id << " | Last Name    : " << lastName << "\n";
+    std::cout << "  | Phone Number : " << phoneNumber << "\n";
+    std::cout << "  | Email Address: " << emailAddress << "\n\n";
 }
 bool Contact::isValidContact()
 {
-    regex namePattern("^[A-Za-z\\s-]+$");
-    regex phonePattern("^(?:\\+91|91)?[-\\s]?[7-9]\\d{4}[-\\s]?\\d{5}$");
-    regex emailPattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    return (regex_match(firstName, namePattern) && regex_match(lastName, namePattern) && regex_match(phoneNumber, phonePattern) && regex_match(emailAddress, emailPattern));
+    std::regex namePattern("^[A-Za-z\\s-]+$");
+    std::regex phonePattern("^(?:\\+91|91)?[-\\s]?[7-9]\\d{4}[-\\s]?\\d{5}$");
+    std::regex emailPattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    return (std::regex_match(firstName, namePattern) && std::regex_match(lastName, namePattern) && std::regex_match(phoneNumber, phonePattern) && std::regex_match(emailAddress, emailPattern));
 }
-void addToFile(vector<Contact> &contacts, int i)
+void saveContacts(std::vector<Contact> &contacts)
 {
-    ofstream contactFile{CONTACT_FILE, ios::app};
-    contactFile.seekp(0, ios::beg);
+   std:: ofstream contactFile{CONTACT_FILE, std::ios::out};
+    //contactFile.seekp(0, std::ios::beg);
     if (!contactFile)
-        cout << "File couldn't be opened for writing\n";
+        std::cout << "File couldn't be opened for writing\n";
     else
     {
-        contactFile << contacts[i].firstName << "; ";
-        contactFile << contacts[i].lastName << "; ";
-        contactFile << contacts[i].phoneNumber << "; ";
-        contactFile << contacts[i].emailAddress << "\n";
+        for (size_t i = 0; i < contacts.size(); ++i)
+        {
+            contactFile << contacts[i].firstName << DELIM;
+            contactFile << contacts[i].lastName << DELIM;
+            contactFile << contacts[i].phoneNumber << DELIM;
+            contactFile << contacts[i].emailAddress << "\n";
+        }
     }
     contactFile.close();
 }
